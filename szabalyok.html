@@ -1,34 +1,42 @@
-<div class="rules-container">
-    <h2>Szabályok</h2>
-    <ul class="styled-rules">
-        <li><strong>A NEM az NEM.</strong> Nincs kérdés, nincs erőltetés.</li>
-        <li><strong>18+ Korhatár.</strong> Csak felnőttek látogathatják a rendezvényt.</li>
-        <li><strong>Telefonok tilosak.</strong> Érkezéskor a szekrénybe kell helyezni őket.</li>
-        <li><strong>Mértékletes alkohol.</strong> A túlzott fogyasztás nem szexi.</li>
-    </ul>
-</div>
-
-<style>
-.rules-container {
-    background-color: #1a1a1a; /* Matching the dark theme */
-    color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #d82323; /* Matching your red accent color */
-}
-.styled-rules {
-    list-style-type: none;
-    padding: 0;
-}
-.styled-rules li {
-    margin-bottom: 15px;
-    padding-left: 25px;
-    position: relative;
-}
-.styled-rules li::before {
-    content: "✘";
-    color: #d82323;
-    position: absolute;
-    left: 0;
-}
-</style>
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szabályok - DelightClub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* A stílusok megegyeznek a fenti alapokkal */
+        :root { --main-red: #d82323; --bg-dark: #121212; --card-bg: #1e1e1e; --text-light: #e0e0e0; }
+        body { font-family: 'Josefin Sans', sans-serif; background-color: var(--bg-dark); color: var(--text-light); margin: 0; }
+        nav { background: rgba(0,0,0,0.9); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--main-red); }
+        .logo { font-size: 1.8rem; font-weight: 600; color: white; text-decoration: none; }
+        .logo span { color: var(--main-red); }
+        .nav-links { list-style: none; display: flex; gap: 20px; }
+        .nav-links a { color: white; text-decoration: none; text-transform: uppercase; font-size: 0.9rem; }
+        
+        .container { max-width: 800px; margin: 4rem auto; padding: 0 20px; }
+        .rule-card { background: var(--card-bg); border-left: 4px solid var(--main-red); padding: 20px; margin-bottom: 15px; border-radius: 4px; transition: transform 0.2s; }
+        .rule-card:hover { transform: translateX(10px); }
+        h1 { text-align: center; color: var(--main-red); }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">Delight<span>Club</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Rólunk</a></li>
+            <li><a href="szabalyok.html">Szabályok</a></li>
+            <li><a href="galeria.html">Galéria</a></li>
+            <li><a href="kapcsolat.html">Kapcsolat</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>Klubszabályzat</h1>
+        <div class="rule-card"><strong>A NEM az NEM.</strong> Nincs kérdés, nincs erőltetés. Aki ezt nem érti, nem látogathat minket.</div>
+        <div class="rule-card"><strong>Magánrendezvény.</strong> Csak 18 éven felüliek számára.</div>
+        <div class="rule-card"><strong>Diszkréció.</strong> Telefonok használata szigorúan tilos, azokat érkezéskor le kell adni.</div>
+        <div class="rule-card"><strong>Alkoholfogyasztás.</strong> Csak mértékkel – a kulturált szórakozás alapfeltétele.</div>
+    </div>
+</body>
+</html>
