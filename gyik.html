@@ -6,17 +6,26 @@
     <title>GYIK - DelightClub</title>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --main-red: #d82323; --bg-dark: #121212; }
+        :root { --main-red: #d82323; --bg-dark: #121212; --card-bg: #1e1e1e; }
         body { font-family: 'Josefin Sans', sans-serif; background-color: var(--bg-dark); color: #e0e0e0; margin: 0; }
-        nav { background: rgba(0,0,0,0.9); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--main-red); }
+        
+        nav { background: rgba(0,0,0,0.95); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--main-red); }
         .logo { font-size: 1.8rem; text-decoration: none; color: white; font-weight: 600; }
         .logo span { color: var(--main-red); }
         .nav-links { list-style: none; display: flex; gap: 20px; padding: 0; }
         .nav-links a { color: white; text-decoration: none; text-transform: uppercase; font-size: 0.9rem; }
+
         .container { max-width: 800px; margin: 4rem auto; padding: 0 20px; }
-        .faq-item { background: #1e1e1e; margin-bottom: 10px; border-radius: 5px; cursor: pointer; }
-        .faq-q { padding: 20px; font-weight: 600; color: white; border-bottom: 1px solid #333; }
-        .faq-a { padding: 20px; display: none; color: #bbb; background: #1a1a1a; }
+        h1 { color: white; text-align: center; font-size: 2.5rem; margin-bottom: 3rem; }
+
+        .faq-item { background: var(--card-bg); margin-bottom: 10px; border-radius: 5px; overflow: hidden; border: 1px solid #333; }
+        .faq-q { padding: 20px; font-weight: 600; color: white; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .faq-q:hover { background: #252525; }
+        .faq-q::after { content: '+'; color: var(--main-red); font-size: 1.2rem; }
+        .faq-item.active .faq-q::after { content: '−'; }
+        
+        .faq-a { padding: 0 20px; max-height: 0; overflow: hidden; transition: 0.3s ease-out; color: #bbb; background: #1a1a1a; }
+        .faq-item.active .faq-a { padding: 20px; max-height: 500px; border-top: 1px solid #333; }
     </style>
 </head>
 <body>
@@ -30,22 +39,36 @@
             <li><a href="kapcsolat.html">Kapcsolat</a></li>
         </ul>
     </nav>
+
     <div class="container">
-        <h1 style="color: var(--main-red); text-align: center;">Gyakori Kérdések</h1>
-        <div class="faq-item" onclick="toggle(this)">
-            <div class="faq-q">Hol található a klub?</div>
-            <div class="faq-a" style="display:block">Budapest 9. kerületében, a Klinikák közelében. A pontos címet csak résztvevőknek adjuk meg.</div>
-        </div>
-        <div class="faq-item" onclick="toggle(this)">
-            <div class="faq-q">Kötelező szexelni a buliban?</div>
-            <div class="faq-a">Semmi sem kötelező! A nézelődés is teljesen elfogadott.</div>
-        </div>
+        <h1>Gyakran Ismételt Kérdések</h1>
+        
+        <div class="faq-list" id="faq-list">
+            </div>
     </div>
+
     <script>
-        function toggle(el) {
-            const a = el.querySelector('.faq-a');
-            a.style.display = a.style.display === 'block' ? 'none' : 'block';
-        }
+        const faqs = [
+            {q: "1. Hol található a klub?", a: "Budapest 9. kerületében, a Klinikák közelében. A pontos címet csak a konkrét résztvevőknek adjuk meg."},
+            {q: "2. Mikor vannak bulik?", a: "Általában havonta egyszer, maximum kétszer tartunk bulit, legtöbbször péntek este 20.00-tól, cca. 3.00-ig. A bulik vége nincs kőbe vésve, volt már hogy reggel 7.00-ig tartott...."},
+            {q: "3. Vannak öltözők?", a: "Igen, zárható szekrényekkel, és széffel is rendelkezünk. Minden ruha, illetve érték biztonságosan tárolható."},
+            {q: "4. Hogy néz ki a helyszín?", a: "2 helyiségből, egy nagyobb társalgó részből, és egy kisebb játszó térből áll a helyszín. Ezenkívül van egy öltöző, és egy zuhanyzó, WC-vel. Zárható szobák nincsenek nálunk."},
+            {q: "5. Kik szoktak a vendégek lenni?", a: "Jellemzően a 30-as 40-es korosztály. Idősebbeket csak abban az esetben várunk, ha fiatalos, csinos, koruknál fiatalabbnak kinéző emberekről van szó."},
+            {q: "6. Milyen a nemek aránya egy buliban?", a: "Nagy általánosságban 15-18 pár, 2-3 szóló lány, 6-8 szóló pasi szokott lenni."},
+            {q: "7. Kötelező szexelni a buliban?", a: "Semmi se kötelező, mindenki azt és azzal csinál csak, amit, és akivel szeretne. Ha csak nézelődni szeretnél, az is teljesen elfogadott viselkedés."},
+            {q: "8. Kezdőként is lehet jönni a buliba?", a: "Természetesen. Senkitől sem kérünk referenciát. :)"},
+            {q: "9. Hogy lehet jelentkezni a bulikba?", a: "Mindenkitől kérünk 3 sor bemutatkozást és egy arcot is láttató fotót (nem szexuálisat). Szeretnénk, ha meglenne az alapszimpátia."},
+            {q: "10. Félünk, hogy kikerülnek rólunk adatok", a: "Senkitől sem kérünk visszaélésre alkalmas adatot. Fotó, videó, hangfelvétel nem készül semmilyen eseményről."}
+        ];
+
+        const list = document.getElementById('faq-list');
+        faqs.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'faq-item';
+            div.innerHTML = `<div class="faq-q">${item.q}</div><div class="faq-a">${item.a}</div>`;
+            div.onclick = () => div.classList.toggle('active');
+            list.appendChild(div);
+        });
     </script>
 </body>
 </html>
