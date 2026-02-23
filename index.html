@@ -20,9 +20,10 @@
             color: white; 
             margin: 0; 
             line-height: 1.8;
+            overflow-x: hidden; /* Megakadályozza az oldalra csúszkálást */
         }
 
-        /* --- NAVIGÁCIÓ --- */
+        /* --- JAVÍTOTT NAVIGÁCIÓ (MOBILBARÁT) --- */
         nav { 
             background: rgba(0,0,0,0.95); 
             padding: 1rem 5%; 
@@ -33,6 +34,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            flex-wrap: wrap; /* Engedi a törést mobilon */
         }
         .logo { font-size: 1.8rem; text-decoration: none; color: white; font-weight: 600; letter-spacing: 2px; }
         .logo span { color: var(--main-red); }
@@ -42,7 +44,7 @@
 
         /* --- HERO SZEKCIÓ --- */
         .hero { 
-            height: 70vh; 
+            height: 60vh; 
             display: flex; 
             flex-direction: column; 
             justify-content: center; 
@@ -58,44 +60,44 @@
         .hero p { font-size: 1.4rem; color: var(--main-red); font-weight: 300; margin-top: 10px; }
 
         /* --- TARTALOM --- */
-        .container { max-width: 900px; margin: 4rem auto; padding: 0 25px; }
+        .container { max-width: 900px; margin: 3rem auto; padding: 0 20px; }
         
         .intro-grid {
             display: grid;
-            gap: 40px;
+            gap: 30px;
         }
 
         .text-block {
             background: var(--card-bg);
-            padding: 40px;
+            padding: 35px;
             border-radius: 10px;
             border-left: 4px solid var(--main-red);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        h2 { color: white; margin-top: 0; font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        p { color: var(--text-gray); font-size: 1.1rem; text-align: justify; }
+        h2 { color: white; margin-top: 0; font-size: 1.7rem; margin-bottom: 1.2rem; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        p { color: var(--text-gray); font-size: 1.05rem; text-align: justify; }
 
         .highlight-box {
-            background: rgba(216, 35, 35, 0.15);
+            background: rgba(216, 35, 35, 0.12);
             border: 1px solid var(--main-red);
-            padding: 25px;
+            padding: 20px;
             border-radius: 8px;
-            margin-top: 30px;
+            margin-top: 25px;
         }
 
-        .highlight-box strong { color: white; display: block; margin-bottom: 10px; font-size: 1.2rem; }
+        .highlight-box strong { color: white; display: block; margin-bottom: 10px; font-size: 1.1rem; }
 
         .cta-section {
             text-align: center;
-            margin-top: 60px;
-            padding: 40px;
+            margin-top: 50px;
+            padding: 30px;
             background: linear-gradient(to right, transparent, #111, transparent);
         }
 
         .email-link {
             color: var(--main-red);
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             text-decoration: none;
             font-weight: 600;
             border-bottom: 2px dashed var(--main-red);
@@ -103,11 +105,22 @@
         }
         .email-link:hover { color: white; border-color: white; }
 
-        footer { text-align: center; padding: 3rem; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid #222; }
+        footer { text-align: center; padding: 2rem; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid #222; }
 
+        /* --- SPECIÁLIS MOBIL JAVÍTÁSOK --- */
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
+            nav { justify-content: center; padding: 10px; }
+            .logo { width: 100%; text-align: center; margin-bottom: 10px; font-size: 1.5rem; }
+            .nav-links { gap: 10px; justify-content: center; }
+            .nav-links a { font-size: 0.75rem; }
+
+            .hero { height: 50vh; }
+            .hero h1 { font-size: 2.2rem; letter-spacing: 2px; }
+            .hero p { font-size: 1rem; }
+
             .text-block { padding: 25px; }
+            .container { margin: 2rem auto; }
+            .email-link { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -138,7 +151,7 @@
                     Az elmúlt néhány évben volt szerencsénk hazai és nemzetközi síkon is megismerni és kiélvezni a swingerélet örömeit, sok kedves ismerőst, barátot szereztünk. A magyar klubokon kívül Ausztria, Németország, Spanyolország, Portugália, Görögország, Csehország klubjaiban is megfordultunk.
                 </p>
                 <p>
-                    Az itt összegyűjtött tapasztalatok birtokában megalkottuk a saját játszóterünket. **Nem swingerklubnak szánjuk, hanem felnőtt játszótérnek**, és igyekszünk is így kezelni. Rendszeresen szervezünk bulikat kezdőknek, haladóknak, többest kedvelőknek és csak pároknak, emellett tematikus és fetish estek is helyet kapnak nálunk.
+                    Az itt összegyűjtött tapasztalatok birtokában megalkottuk a saját játszóterünket. Nem swingerklubnak szánjuk, hanem felnőtt játszótérnek, és igyekszünk is így kezelni. Rendszeresen szervezünk bulikat kezdőknek, haladóknak, többest kedvelőknek és csak pároknak, emellett tematikus és fetish estek is helyet kapnak nálunk.
                 </p>
             </section>
 
@@ -160,7 +173,7 @@
             <section class="text-block" style="border-left-color: #555;">
                 <h2>Dohányzás</h2>
                 <p>
-                    Mi nem dohányzunk. Nem zavar minket, ha ti igen, viszont fontos tudnotok, hogy **estjeink nem dohányzóak**, és a helyszínen nincs semmiféle dohányzási lehetőség. Kérjük, ezt vegyétek figyelembe a jelentkezéskor.
+                    Mi nem dohányzunk. Nem zavar minket, ha ti igen, viszont fontos tudnotok, hogy estjeink nem dohányzóak, és a helyszínen nincs semmiféle dohányzási lehetőség. Kérjük, ezt vegyétek figyelembe a jelentkezéskor.
                 </p>
             </section>
 
@@ -177,4 +190,3 @@
 
 </body>
 </html>
-
