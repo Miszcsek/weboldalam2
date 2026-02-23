@@ -1,0 +1,34 @@
+<div class="rules-container">
+    <h2>Szabályok</h2>
+    <ul class="styled-rules">
+        <li><strong>A NEM az NEM.</strong> Nincs kérdés, nincs erőltetés.</li>
+        <li><strong>18+ Korhatár.</strong> Csak felnőttek látogathatják a rendezvényt.</li>
+        <li><strong>Telefonok tilosak.</strong> Érkezéskor a szekrénybe kell helyezni őket.</li>
+        <li><strong>Mértékletes alkohol.</strong> A túlzott fogyasztás nem szexi.</li>
+    </ul>
+</div>
+
+<style>
+.rules-container {
+    background-color: #1a1a1a; /* Matching the dark theme */
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #d82323; /* Matching your red accent color */
+}
+.styled-rules {
+    list-style-type: none;
+    padding: 0;
+}
+.styled-rules li {
+    margin-bottom: 15px;
+    padding-left: 25px;
+    position: relative;
+}
+.styled-rules li::before {
+    content: "✘";
+    color: #d82323;
+    position: absolute;
+    left: 0;
+}
+</style>
