@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DelightClub - Galéria</title>
+    <style>
+        /* Alapstílusok */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a; /* Sötét háttér a klub hangulathoz */
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #d82323; /* A kódodban szereplő piros árnyalat */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+        }
+
+        /* Galéria Rács */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Kép kártya stílusa */
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+            background-color: #222;
+            aspect-ratio: 3 / 4; /* Egységesített méretarány */
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(216, 35, 35, 0.4);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Kitölti a területet torzítás nélkül */
+            display: block;
+            cursor: pointer;
+        }
+
+        /* Mobil nézet finomítása */
+        @media (max-width: 600px) {
+            .gallery-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Galéria</h1>
+
+    <div class="gallery-container">
+        <div class="gallery-item">
+            <img src="https://81de119f28.cbaul-cdnwnd.com/9e169b91ea1c0f30efa598fb7a454c7d/200000014-38ea438ea6/700/IMG_20211226_224839-0.jpeg?ph=81de119f28" alt="DelightClub kép">
+        </div>
+        <div class="gallery-item">
+            <img src="https://81de119f28.cbaul-cdnwnd.com/9e169b91ea1c0f30efa598fb7a454c7d/200000013-37a7137a72/700/IMG-7b3b1d11a6ad50dbe99ba7c4cac77f6a-V-2.jpeg?ph=81de119f28" alt="DelightClub kép">
+        </div>
+        <div class="gallery-item">
+            <img src="https://81de119f28.cbaul-cdnwnd.com/9e169b91ea1c0f30efa598fb7a454c7d/200000012-2cc432cc44/700/received_171949960972000-4.jpeg?ph=81de119f28" alt="DelightClub kép">
+        </div>
+        <div class="gallery-item">
+            <img src="https://81de119f28.cbaul-cdnwnd.com/9e169b91ea1c0f30efa598fb7a454c7d/200000015-3f3173f319/700/received_248984616484241-8.jpeg?ph=81de119f28" alt="DelightClub kép">
+        </div>
+        <div class="gallery-item">
+            <img src="https://81de119f28.cbaul-cdnwnd.com/9e169b91ea1c0f30efa598fb7a454c7d/200000016-4725447256/700/received_369450091062438-9.jpeg?ph=81de119f28" alt="DelightClub kép">
+        </div>
+        <div class="gallery-item">
+            <img src="https://81de119f28.cbaul-cdnwnd.com/9e169b91ea1c0f30efa598fb7a454c7d/200000028-2b05b2b05c/700/1M5A7755.jpeg?ph=81de119f28" alt="DelightClub kép">
+        </div>
+        <div class="gallery-item">
+            <img src="https://81de119f28.cbaul-cdnwnd.com/9e169b91ea1c0f30efa598fb7a454c7d/200000030-cb520cb522/700/1M5A7767.jpeg?ph=81de119f28" alt="DelightClub kép">
+        </div>
+        <div class="gallery-item">
+            <img src="https://81de119f28.cbaul-cdnwnd.com/9e169b91ea1c0f30efa598fb7a454c7d/200000032-6dab36dab4/700/1000001883%281%29.jpeg?ph=81de119f28" alt="DelightClub kép">
+        </div>
+    </div>
+
+</body>
+</html>
