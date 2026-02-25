@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="https://duyn491kcolsw.cloudfront.net/files/27/276/450/276r7e.jpg?ph=81de119f28"> 
+    <title>Programok - DelightClub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --main-red: #d82323; 
+            --bg-dark: #0a0a0a; 
+            --card-bg: #161616; 
+            --text-gray: #bbb;
+        }
+
+        body { 
+            font-family: 'Josefin Sans', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: white; 
+            margin: 0; 
+            line-height: 1.6;
+        }
+
+        /* --- NAVIGÁCIÓ (Ugyanaz, mint a többi oldalon) --- */
+        nav { 
+            background: rgba(0,0,0,0.95); padding: 1rem 5%; display: flex; 
+            justify-content: space-between; align-items: center; 
+            border-bottom: 2px solid var(--main-red); position: sticky; top: 0; z-index: 1000; flex-wrap: wrap;
+        }
+        .logo { font-size: 1.8rem; text-decoration: none; color: white; font-weight: 600; letter-spacing: 2px; }
+        .logo span { color: var(--main-red); }
+        .nav-links { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
+        .nav-links a { color: white; text-decoration: none; text-transform: uppercase; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--main-red); }
+
+        /* --- TARTALOM --- */
+        .container { max-width: 900px; margin: 3rem auto; padding: 0 20px; }
+        h1 { text-align: center; font-size: 2.5rem; margin-bottom: 1rem; }
+        .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 3rem; }
+
+        /* Program kártyák stílusa */
+        #program-list { display: grid; gap: 20px; }
+        .event-card { 
+            background: var(--card-bg); 
+            padding: 25px; 
+            border-radius: 12px; 
+            border-left: 5px solid var(--main-red);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .event-info h3 { margin: 0 0 10px 0; color: white; font-size: 1.4rem; }
+        .event-date { color: var(--main-red); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .event-desc { color: var(--text-gray); margin-top: 5px; }
+        .status-tag { 
+            background: rgba(216, 35, 35, 0.2); 
+            color: var(--main-red); 
+            padding: 5px 12px; 
+            border-radius: 20px; 
+            font-size: 0.8rem;
+            border: 1px solid var(--main-red);
+        }
+
+        /* Betöltés jelző */
+        .loader { text-align: center; color: var(--main-red); font-style: italic; }
+
+        @media (max-width: 768px) {
+            nav { justify-content: center; padding: 10px; }
+            .logo { width: 100%; text-align: center; margin-bottom: 10px; }
+            .nav-links { gap: 10px; justify-content: center; width: 100%; }
+            .event-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">Delight<span>Club</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Rólunk</a></li>
+            <li><a href="programok.html">Programok</a></li>
+            <li><a href="szabalyok.html">Szabályok</a></li>
+            <li><a href="galeria.html">Galéria</a></li>
+            <li><a href="gyik.html">GYIK</a></li>
+            <li><a href="kapcsolat.html">Kapcsolat</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Közelgő Események</h1>
+        <p class="subtitle">Itt láthatjátok a legfrissebb bulijainkat. Jelentkezés e-mailben!</p>
+        
+        <div id="program-list">
+            <p class="loader">Programok betöltése...</p>
+        </div>
+    </div>
+
+    <script>
+        // IDE MÁSOLD A GOOGLE TÁBLÁZATBÓL A KIMÁSOLT CSV LINKET!
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQPS-OPzKro8PfEeJZ1KFLDiaS4DEQLo-xX-k8nHAi-h5SDqJxxTVxyEPeOtN9b4ufcdawr66xIOVLK/pub?output=csv';
+
+        async function fetchPrograms() {
+            try {
+                const response = await fetch(sheetUrl);
+                const data = await response.text();
+                const rows = data.split('\n').slice(1); // Fejléc kihagyása
+                
+                const listContainer = document.getElementById('program-list');
+                listContainer.innerHTML = ''; // Loader eltávolítása
+
+                rows.forEach(row => {
+                    const columns = row.split(',');
+                    if (columns.length >= 3) {
+                        const [datum, nev, leiras, statusz] = columns;
+                        
+                        const card = document.createElement('div');
+                        card.className = 'event-card';
+                        card.innerHTML = `
+                            <div class="event-info">
+                                <div class="event-date">${datum}</div>
+                                <h3>${nev}</h3>
+                                <div class="event-desc">${leiras}</div>
+                            </div>
+                            <div class="status-tag">${statusz || 'Aktív'}</div>
+                        `;
+                        listContainer.appendChild(card);
+                    }
+                });
+            } catch (error) {
+                document.getElementById('program-list').innerHTML = '<p style="color:white">Hiba történt a programok betöltésekor. Kérjük, nézz vissza később!</p>';
+            }
+        }
+
+        fetchPrograms();
+    </script>
+
+    <footer style="text-align: center; padding: 2rem; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid #222;">
+        DelightClub &copy; 2026
+    </footer>
+
+</body>
+</html>
