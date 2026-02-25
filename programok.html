@@ -99,42 +99,42 @@
     </div>
 
 <script>
-    // A Te Google CSV linked (ügyelj rá, hogy a végén ?output=csv legyen)
+    // Ügyelj rá, hogy a CSV link idézőjelek között legyen!
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQPS-OPzKro8PfEeJZ1KFLDiaS4DEQLo-xX-k8nHAi-h5SDqJxxTVxyEPeOtN9b4ufcdawr66xIOVLK/pub?output=csv';
 
     async function fetchPrograms() {
         const listContainer = document.getElementById('program-list');
-        
+        if (!listContainer) return;
+
         try {
-            // A link végéhez adunk egy véletlen számot, hogy a böngésző ne a régi (cache) változatot töltse be
-            const cacheBuster = sheetUrl.includes('?') ? '&' : '?';
-            const finalUrl = sheetUrl + cacheBuster + 't=' + new Date().getTime();
+            // Megakadályozzuk, hogy a böngésző a régi adatokat tárolja (Cache Buster)
+            const separator = sheetUrl.includes('?') ? '&' : '?';
+            const finalUrl = `${sheetUrl}${separator}t=${new Date().getTime()}`;
 
             const response = await fetch(finalUrl);
-            
-            if (!response.ok) throw new Error('Hálózati hiba');
+            if (!response.ok) throw new Error('Nem sikerült elérni a táblázatot');
 
             const data = await response.text();
             
-            // Sorokra bontás, üres sorok kihagyása
+            // Sorokra bontás, üres sorok szűrése
             const rows = data.split(/\r?\n/).filter(row => row.trim() !== '').slice(1);
             
             listContainer.innerHTML = ''; 
 
             if (rows.length === 0) {
-                listContainer.innerHTML = '<p style="text-align:center; opacity:0.6;">Jelenleg nincs tervezett eseményünk. Nézz vissza később!</p>';
+                listContainer.innerHTML = '<p style="text-align:center; opacity:0.6;">Jelenleg nincs tervezett eseményünk.</p>';
                 return;
             }
 
             rows.forEach(row => {
-                // Kezeli a pontosvesszőt és a vesszőt is
+                // Kezeli a magyar (;) és angol (,) elválasztókat is
                 const columns = row.includes(';') ? row.split(';') : row.split(',');
                 
                 if (columns.length >= 2) {
-                    const datum = columns[0] ? columns[0].replace(/"/g, '') : "";
-                    const nev = columns[1] ? columns[1].replace(/"/g, '') : "Névtelen esemény";
-                    const leiras = columns[2] ? columns[2].replace(/"/g, '') : "";
-                    const statusz = columns[3] ? columns[3].replace(/"/g, '') : "Aktív";
+                    const datum = (columns[0] || "Hamarosan").replace(/"/g, '');
+                    const nev = (columns[1] || "Delight Party").replace(/"/g, '');
+                    const leiras = (columns[2] || "").replace(/"/g, '');
+                    const statusz = (columns[3] || "Aktív").replace(/"/g, '');
                     
                     const card = document.createElement('div');
                     card.className = 'event-card';
@@ -151,13 +151,17 @@
             });
 
         } catch (error) {
-            console.error("Hiba történt:", error);
-            listContainer.innerHTML = '<p style="text-align:center; color:var(--main-red);">Hiba a betöltéskor. Próbáld meg frissíteni az oldalt!</p>';
+            console.error("Hiba:", error);
+            listContainer.innerHTML = '<p style="text-align:center; color:#d82323;">Hiba történt a betöltéskor. Ellenőrizd a táblázat linkjét!</p>';
         }
     }
 
-    // Csak akkor indul el, ha az oldal már teljesen betöltődött
-    window.addEventListener('DOMContentLoaded', fetchPrograms);
+    // Biztosítjuk, hogy az oldal betöltése után fusson le
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fetchPrograms);
+    } else {
+        fetchPrograms();
+    }
 </script>
 
     <footer style="text-align: center; padding: 2rem; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid #222;">
