@@ -22,9 +22,9 @@
         }
         
         /* --- JAVÍTOTT NAVIGÁCIÓ (MOBILBARÁT) --- */
-        nav { 
+nav { 
             background: rgba(0,0,0,0.95); 
-            padding: 1rem 5%; 
+            padding: 0.8rem 3%; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -32,7 +32,48 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            flex-wrap: wrap;
+        }
+        .logo { font-size: 1.5rem; text-decoration: none; color: white; font-weight: 600; letter-spacing: 1px; flex-shrink: 0; }
+        .logo span { color: var(--main-red); }
+        
+        .nav-links { 
+            list-style: none; 
+            display: flex; 
+            gap: 15px; 
+            margin: 0; 
+            padding: 0; 
+        }
+        .nav-links a { 
+            color: white; 
+            text-decoration: none; 
+            text-transform: uppercase; 
+            font-size: 0.8rem; 
+            transition: 0.3s;
+            white-space: nowrap; /* Megakadályozza a szavak törését */
+        }
+        .nav-links a:hover { color: var(--main-red); }
+
+        /* --- MOBIL JAVÍTÁSOK (Amikor már nem férne el) --- */
+        @media (max-width: 768px) {
+            nav { 
+                flex-direction: column; /* Egymás alá teszi a logót és a menüt */
+                padding: 10px 5px;
+            }
+            .logo { 
+                margin-bottom: 10px; 
+                font-size: 1.4rem; 
+            }
+            .nav-links { 
+                display: flex;
+                flex-wrap: wrap; /* Ha sok a menüpont, több sorba tördeli */
+                justify-content: center;
+                gap: 8px 12px; /* Függőleges és vízszintes távolság */
+                width: 100%;
+            }
+            .nav-links a { 
+                font-size: 0.7rem; /* Kicsit kisebb betű, hogy több férjen el */
+                padding: 5px;
+            }
         }
         .logo { font-size: 1.8rem; text-decoration: none; color: white; font-weight: 600; letter-spacing: 2px; }
         .logo span { color: var(--main-red); }
