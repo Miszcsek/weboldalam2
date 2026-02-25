@@ -98,44 +98,67 @@
         </div>
     </div>
 
-    <script>
-        // IDE MÁSOLD A GOOGLE TÁBLÁZATBÓL A KIMÁSOLT CSV LINKET!
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQPS-OPzKro8PfEeJZ1KFLDiaS4DEQLo-xX-k8nHAi-h5SDqJxxTVxyEPeOtN9b4ufcdawr66xIOVLK/pub?output=csv';
+<script>
+    // A Te Google CSV linked (ügyelj rá, hogy a végén ?output=csv legyen)
+    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQPS-OPzKro8PfEeJZ1KFLDiaS4DEQLo-xX-k8nHAi-h5SDqJxxTVxyEPeOtN9b4ufcdawr66xIOVLK/pubhtml';
 
-        async function fetchPrograms() {
-            try {
-                const response = await fetch(sheetUrl);
-                const data = await response.text();
-                const rows = data.split('\n').slice(1); // Fejléc kihagyása
-                
-                const listContainer = document.getElementById('program-list');
-                listContainer.innerHTML = ''; // Loader eltávolítása
+    async function fetchPrograms() {
+        const listContainer = document.getElementById('program-list');
+        
+        try {
+            // A link végéhez adunk egy véletlen számot, hogy a böngésző ne a régi (cache) változatot töltse be
+            const cacheBuster = sheetUrl.includes('?') ? '&' : '?';
+            const finalUrl = sheetUrl + cacheBuster + 't=' + new Date().getTime();
 
-                rows.forEach(row => {
-                    const columns = row.split(',');
-                    if (columns.length >= 3) {
-                        const [datum, nev, leiras, statusz] = columns;
-                        
-                        const card = document.createElement('div');
-                        card.className = 'event-card';
-                        card.innerHTML = `
-                            <div class="event-info">
-                                <div class="event-date">${datum}</div>
-                                <h3>${nev}</h3>
-                                <div class="event-desc">${leiras}</div>
-                            </div>
-                            <div class="status-tag">${statusz || 'Aktív'}</div>
-                        `;
-                        listContainer.appendChild(card);
-                    }
-                });
-            } catch (error) {
-                document.getElementById('program-list').innerHTML = '<p style="color:white">Hiba történt a programok betöltésekor. Kérjük, nézz vissza később!</p>';
+            const response = await fetch(finalUrl);
+            
+            if (!response.ok) throw new Error('Hálózati hiba');
+
+            const data = await response.text();
+            
+            // Sorokra bontás, üres sorok kihagyása
+            const rows = data.split(/\r?\n/).filter(row => row.trim() !== '').slice(1);
+            
+            listContainer.innerHTML = ''; 
+
+            if (rows.length === 0) {
+                listContainer.innerHTML = '<p style="text-align:center; opacity:0.6;">Jelenleg nincs tervezett eseményünk. Nézz vissza később!</p>';
+                return;
             }
-        }
 
-        fetchPrograms();
-    </script>
+            rows.forEach(row => {
+                // Kezeli a pontosvesszőt és a vesszőt is
+                const columns = row.includes(';') ? row.split(';') : row.split(',');
+                
+                if (columns.length >= 2) {
+                    const datum = columns[0] ? columns[0].replace(/"/g, '') : "";
+                    const nev = columns[1] ? columns[1].replace(/"/g, '') : "Névtelen esemény";
+                    const leiras = columns[2] ? columns[2].replace(/"/g, '') : "";
+                    const statusz = columns[3] ? columns[3].replace(/"/g, '') : "Aktív";
+                    
+                    const card = document.createElement('div');
+                    card.className = 'event-card';
+                    card.innerHTML = `
+                        <div class="event-info">
+                            <div class="event-date">${datum}</div>
+                            <h3>${nev}</h3>
+                            <div class="event-desc">${leiras}</div>
+                        </div>
+                        <div class="status-tag">${statusz}</div>
+                    `;
+                    listContainer.appendChild(card);
+                }
+            });
+
+        } catch (error) {
+            console.error("Hiba történt:", error);
+            listContainer.innerHTML = '<p style="text-align:center; color:var(--main-red);">Hiba a betöltéskor. Próbáld meg frissíteni az oldalt!</p>';
+        }
+    }
+
+    // Csak akkor indul el, ha az oldal már teljesen betöltődött
+    window.addEventListener('DOMContentLoaded', fetchPrograms);
+</script>
 
     <footer style="text-align: center; padding: 2rem; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid #222;">
         DelightClub &copy; 2026
