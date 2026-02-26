@@ -22,8 +22,7 @@
             line-height: 1.6;
         }
 
-        /* --- NAVIGÁCIÓ (Ugyanaz, mint a többi oldalon) --- */
-nav { 
+        nav { 
             background: rgba(0,0,0,0.95); 
             padding: 0.8rem 3%; 
             display: flex; 
@@ -36,58 +35,20 @@ nav {
         }
         .logo { font-size: 1.5rem; text-decoration: none; color: white; font-weight: 600; letter-spacing: 1px; flex-shrink: 0; }
         .logo span { color: var(--main-red); }
-        
-        .nav-links { 
-            list-style: none; 
-            display: flex; 
-            gap: 15px; 
-            margin: 0; 
-            padding: 0; 
-        }
-        .nav-links a { 
-            color: white; 
-            text-decoration: none; 
-            text-transform: uppercase; 
-            font-size: 0.8rem; 
-            transition: 0.3s;
-            white-space: nowrap; /* Megakadályozza a szavak törését */
-        }
-        .nav-links a:hover { color: var(--main-red); }
+        .nav-links { list-style: none; display: flex; gap: 15px; margin: 0; padding: 0; }
+        .nav-links a { color: white; text-decoration: none; text-transform: uppercase; font-size: 0.8rem; transition: 0.3s; white-space: nowrap; }
 
-        /* --- MOBIL JAVÍTÁSOK (Amikor már nem férne el) --- */
         @media (max-width: 768px) {
-            nav { 
-                flex-direction: column; /* Egymás alá teszi a logót és a menüt */
-                padding: 10px 5px;
-            }
-            .logo { 
-                margin-bottom: 10px; 
-                font-size: 1.4rem; 
-            }
-            .nav-links { 
-                display: flex;
-                flex-wrap: wrap; /* Ha sok a menüpont, több sorba tördeli */
-                justify-content: center;
-                gap: 8px 12px; /* Függőleges és vízszintes távolság */
-                width: 100%;
-            }
-            .nav-links a { 
-                font-size: 0.7rem; /* Kicsit kisebb betű, hogy több férjen el */
-                padding: 5px;
-            }
+            nav { flex-direction: column; padding: 10px 5px; }
+            .logo { margin-bottom: 10px; font-size: 1.4rem; }
+            .nav-links { flex-wrap: wrap; justify-content: center; gap: 8px 12px; width: 100%; }
+            .nav-links a { font-size: 0.7rem; padding: 5px; }
         }
-        .logo { font-size: 1.8rem; text-decoration: none; color: white; font-weight: 600; letter-spacing: 2px; }
-        .logo span { color: var(--main-red); }
-        .nav-links { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
-        .nav-links a { color: white; text-decoration: none; text-transform: uppercase; font-size: 0.9rem; transition: 0.3s; }
-        .nav-links a:hover { color: var(--main-red); }
 
-        /* --- TARTALOM --- */
         .container { max-width: 900px; margin: 3rem auto; padding: 0 20px; }
         h1 { text-align: center; font-size: 2.5rem; margin-bottom: 1rem; }
         .subtitle { text-align: center; color: var(--text-gray); margin-bottom: 3rem; }
 
-        /* Program kártyák stílusa */
         #program-list { display: grid; gap: 20px; }
         .event-card { 
             background: var(--card-bg); 
@@ -96,12 +57,13 @@ nav {
             border-left: 5px solid var(--main-red);
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             transition: 0.3s;
         }
+        .event-info { flex: 1; padding-right: 20px; }
         .event-info h3 { margin: 0 0 10px 0; color: white; font-size: 1.4rem; }
         .event-date { color: var(--main-red); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
-        .event-desc { color: var(--text-gray); margin-top: 5px; }
+        .event-desc { color: var(--text-gray); margin-top: 5px; text-align: justify; }
         .status-tag { 
             background: rgba(216, 35, 35, 0.2); 
             color: var(--main-red); 
@@ -109,17 +71,14 @@ nav {
             border-radius: 20px; 
             font-size: 0.8rem;
             border: 1px solid var(--main-red);
+            white-space: nowrap;
         }
 
-        /* Betöltés jelző */
         .loader { text-align: center; color: var(--main-red); font-style: italic; }
 
-        @media (max-width: 768px) {
-            nav { justify-content: center; padding: 10px; }
-            .logo { width: 100%; text-align: center; margin-bottom: 10px; }
-            .nav-links { gap: 10px; justify-content: center; width: 100%; }
-            .event-card { flex-direction: column; align-items: flex-start; gap: 15px; }
-            h1 { font-size: 2rem; }
+        @media (max-width: 600px) {
+            .event-card { flex-direction: column; }
+            .status-tag { margin-top: 15px; align-self: flex-start; }
         }
     </style>
 </head>
@@ -140,31 +99,46 @@ nav {
     <div class="container">
         <h1>Közelgő Események</h1>
         <p class="subtitle">Itt láthatjátok a legfrissebb bulijainkat. Jelentkezés e-mailben!</p>
-        
         <div id="program-list">
             <p class="loader">Programok betöltése...</p>
         </div>
     </div>
 
 <script>
-    // Ügyelj rá, hogy a CSV link idézőjelek között legyen!
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQPS-OPzKro8PfEeJZ1KFLDiaS4DEQLo-xX-k8nHAi-h5SDqJxxTVxyEPeOtN9b4ufcdawr66xIOVLK/pub?output=csv';
+
+    // CSV sor daraboló funkció, ami figyelembe veszi az idézőjeleket
+    function parseCSVLine(line) {
+        const result = [];
+        let cur = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (char === '"') {
+                inQuotes = !inQuotes;
+            } else if ((char === ',' || char === ';') && !inQuotes) {
+                result.push(cur.trim());
+                cur = '';
+            } else {
+                cur += char;
+            }
+        }
+        result.push(cur.trim());
+        return result;
+    }
 
     async function fetchPrograms() {
         const listContainer = document.getElementById('program-list');
         if (!listContainer) return;
 
         try {
-            // Megakadályozzuk, hogy a böngésző a régi adatokat tárolja (Cache Buster)
             const separator = sheetUrl.includes('?') ? '&' : '?';
             const finalUrl = `${sheetUrl}${separator}t=${new Date().getTime()}`;
 
             const response = await fetch(finalUrl);
-            if (!response.ok) throw new Error('Nem sikerült elérni a táblázatot');
+            if (!response.ok) throw new Error('Hiba');
 
             const data = await response.text();
-            
-            // Sorokra bontás, üres sorok szűrése
             const rows = data.split(/\r?\n/).filter(row => row.trim() !== '').slice(1);
             
             listContainer.innerHTML = ''; 
@@ -175,14 +149,13 @@ nav {
             }
 
             rows.forEach(row => {
-                // Kezeli a magyar (;) és angol (,) elválasztókat is
-                const columns = row.includes(';') ? row.split(';') : row.split(',');
+                const columns = parseCSVLine(row);
                 
                 if (columns.length >= 2) {
-                    const datum = (columns[0] || "Hamarosan").replace(/"/g, '');
-                    const nev = (columns[1] || "Delight Party").replace(/"/g, '');
-                    const leiras = (columns[2] || "").replace(/"/g, '');
-                    const statusz = (columns[3] || "Aktív").replace(/"/g, '');
+                    const datum = columns[0] || "Hamarosan";
+                    const nev = columns[1] || "Delight Party";
+                    const leiras = columns[2] || "";
+                    const statusz = columns[3] || "Aktív";
                     
                     const card = document.createElement('div');
                     card.className = 'event-card';
@@ -190,7 +163,7 @@ nav {
                         <div class="event-info">
                             <div class="event-date">${datum}</div>
                             <h3>${nev}</h3>
-                            <div class="event-desc">${leiras}</div>
+                            <p class="event-desc">${leiras}</p>
                         </div>
                         <div class="status-tag">${statusz}</div>
                     `;
@@ -199,17 +172,11 @@ nav {
             });
 
         } catch (error) {
-            console.error("Hiba:", error);
-            listContainer.innerHTML = '<p style="text-align:center; color:#d82323;">Hiba történt a betöltéskor. Ellenőrizd a táblázat linkjét!</p>';
+            listContainer.innerHTML = '<p style="text-align:center; color:#d82323;">Hiba történt a betöltéskor.</p>';
         }
     }
 
-    // Biztosítjuk, hogy az oldal betöltése után fusson le
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', fetchPrograms);
-    } else {
-        fetchPrograms();
-    }
+    fetchPrograms();
 </script>
 
     <footer style="text-align: center; padding: 2rem; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid #222;">
